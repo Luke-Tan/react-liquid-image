@@ -21,7 +21,7 @@ function LiquidImage(_ref) {
   let {
     width = 500,
     height = 300,
-    src = "html.png",
+    src = null,
     particleSize = 3,
     push = 1 / 60,
     threshold = 60,
