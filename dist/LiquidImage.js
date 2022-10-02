@@ -9,7 +9,7 @@ exports.default = LiquidImage;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _liquid2 = _interopRequireDefault(require("./liquid.js"));
+var _liquid = _interopRequireDefault(require("./liquid.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34,14 +34,15 @@ function LiquidImage(_ref) {
 
   const canvasRef = _react.default.useRef(null);
 
+  const liquidRef = _react.default.useRef(null);
+
   (0, _react.useEffect)(() => {
     const img = new Image();
     img.crossOrigin = "Anonymous";
     img.src = src;
-    let liquid;
 
     img.onload = () => {
-      liquid = new _liquid2.default({
+      liquidRef.current = new _liquid.default({
         canvas: canvasRef.current,
         img: img,
         particleSize,
@@ -56,16 +57,39 @@ function LiquidImage(_ref) {
         canvasHeight
       });
       setTimeout(() => {
-        liquid.start();
+        var _liquidRef$current;
+
+        liquidRef === null || liquidRef === void 0 ? void 0 : (_liquidRef$current = liquidRef.current) === null || _liquidRef$current === void 0 ? void 0 : _liquidRef$current.start();
       }, 1e3);
     };
 
     return () => {
-      var _liquid;
+      var _liquidRef$current2;
 
-      (_liquid = liquid) === null || _liquid === void 0 ? void 0 : _liquid.stop();
+      liquidRef === null || liquidRef === void 0 ? void 0 : (_liquidRef$current2 = liquidRef.current) === null || _liquidRef$current2 === void 0 ? void 0 : _liquidRef$current2.stop();
     };
   }, []);
+  (0, _react.useEffect)(() => {
+    if (liquidRef !== null && liquidRef !== void 0 && liquidRef.current) {
+      var _liquidRef$current3, _liquidRef$current4;
+
+      liquidRef.current.stop();
+      liquidRef === null || liquidRef === void 0 ? void 0 : (_liquidRef$current3 = liquidRef.current) === null || _liquidRef$current3 === void 0 ? void 0 : _liquidRef$current3.init({
+        isUpdate: true,
+        particleSize,
+        push,
+        width,
+        height,
+        threshold,
+        particleType,
+        gap,
+        noise,
+        canvasHeight,
+        canvasWidth
+      });
+      liquidRef === null || liquidRef === void 0 ? void 0 : (_liquidRef$current4 = liquidRef.current) === null || _liquidRef$current4 === void 0 ? void 0 : _liquidRef$current4.start();
+    }
+  }, [particleSize, push, noise, particleType, gap]);
   return /*#__PURE__*/_react.default.createElement("canvas", {
     ref: canvasRef,
     width: canvasWidth,

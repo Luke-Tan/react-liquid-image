@@ -4,13 +4,29 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+const _excluded = ["canvas", "img"],
+      _excluded2 = ["isUpdate"];
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 /* eslint-disable no-unused-expressions */
 class Liquid {
   constructor(_ref) {
     let {
       canvas,
-      img,
+      img
+    } = _ref,
+        rest = _objectWithoutProperties(_ref, _excluded);
+
+    this.canvas = canvas;
+    this.img = img;
+    this.init(rest);
+  }
+
+  initProps(_ref2) {
+    let {
       particleSize,
       push,
       width,
@@ -21,12 +37,10 @@ class Liquid {
       noise,
       canvasHeight,
       canvasWidth
-    } = _ref;
-    this.canvas = canvas;
-    this.img = img;
+    } = _ref2;
     this.mouse = {
-      x: -100,
-      y: -100
+      x: -1000000000,
+      y: -1000000000
     };
     this.particles = [];
     this.ctx = void 0;
@@ -64,12 +78,17 @@ class Liquid {
           this.step = this.particleSize;
         }
     }
-
-    this.init();
   }
 
-  init() {
-    this.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this)), this.canvas.addEventListener("mouseleave", this.handleMouseLeave.bind(this));
+  init(_ref3) {
+    let {
+      isUpdate = false
+    } = _ref3,
+        props = _objectWithoutProperties(_ref3, _excluded2);
+
+    this.initProps(props);
+    this.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this));
+    this.canvas.addEventListener("mouseleave", this.handleMouseLeave.bind(this));
     this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     this.ctx.drawImage(this.img, (this.canvasWidth - this.width) / 2, (this.canvasHeight - this.height) / 2, this.width, this.height);
     const imageData = this.ctx.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
@@ -82,8 +101,8 @@ class Liquid {
 
       if (!(r <= this.threshold && g <= this.threshold && b <= this.threshold)) {
         this.particles.push({
-          currX: Math.random() * this.canvasWidth,
-          currY: 0,
+          currX: isUpdate ? j : Math.random() * this.canvasWidth,
+          currY: isUpdate ? i : 0,
           springOriginX: j,
           springOriginY: i,
           colors: {
@@ -101,7 +120,9 @@ class Liquid {
   }
 
   stop() {
-    cancelAnimationFrame(this.requestAnimationFrameId), document.removeEventListener("mousemove", this.handleMouseMove), document.removeEventListener("mouseleave", this.handleMouseLeave);
+    cancelAnimationFrame(this.requestAnimationFrameId);
+    document.removeEventListener("mousemove", this.handleMouseMove);
+    document.removeEventListener("mouseleave", this.handleMouseLeave);
   }
 
   handleMouseMove(t) {
@@ -110,8 +131,8 @@ class Liquid {
   }
 
   handleMouseLeave() {
-    this.mouse.x = -100;
-    this.mouse.y = -100;
+    this.mouse.x = -1000000000;
+    this.mouse.y = -1000000000;
   }
 
   render() {
@@ -144,8 +165,10 @@ class Liquid {
       particle.currY += vyOrigin;
       particle.currX += xRepulse * this.push;
       particle.currY += yRepulse * this.push;
-      this.noise && (particle.currX += Math.random() * this.noise);
-      this.noise && (particle.currY += Math.random() * this.noise);
+      let xc = Math.random() < 0.5 ? -1 : 1;
+      let yc = Math.random() < 0.5 ? -1 : 1;
+      this.noise && (particle.currX += Math.random() * this.noise * xc);
+      this.noise && (particle.currY += Math.random() * this.noise * yc);
       this.ctx.fillStyle = "rgba(".concat(r, ",").concat(g, ",").concat(b, ",1)");
       this.ctx.beginPath();
 
