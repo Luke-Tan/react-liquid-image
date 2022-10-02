@@ -1,70 +1,43 @@
-# Getting Started with Create React App
+# react-liquid-image
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An aesthetic component that turns an image into a particlized version with an interactive liquid effect on mouseOver. Inspired and adapted from the homepage of https://frontendexpert.io/.
 
-## Available Scripts
+Supports customization such as
 
-In the project directory, you can run:
+1. Particle size
+2. Particle gap
+3. Particle shape (square, circle)
+4. Noise (particle resting movement)
+5. Push magnitude (on mouseOver)
 
-### `npm start`
+# Usage
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. `npm install react-liquid-image`
+2. `import { LiquidImage } from react-liquid-image`
+3. use with `<LiquidImage />` in your React app
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Demo
 
-### `npm test`
+Coming soon
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Props
 
-### `npm run build`
+| Prop Name    | Description                                                                                                              | Type                    | Default    |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------ | ----------------------- | ---------- |
+| img          | Image source                                                                                                             | `string`                | `null`     |
+| width        | Width of resulting particlized image that is drawn                                                                       | `Number`                | `500`      |
+| height       | Width of resulting particlized image that is drawn                                                                       | `Number`                | `300`      |
+| canvasWidth  | Width of the canvas to draw the particlized image on                                                                     | `Number`                | `800`      |
+| canvasHeight | Width of the canvas to draw the particlized image on                                                                     | `Number`                | `400`      |
+| noise        | How much each particle jiggles when resting (set to 0 for stationary particles at rest)                                  | `Number`                | `0.8`      |
+| gap          | Gap between each particle                                                                                                | `Number`                | `5`        |
+| particleType | Shape of each particle                                                                                                   | `"square" \| "circle" ` | `"square"` |
+| particleSize | Size of each particle                                                                                                    | `Number `               | `3`        |
+| threshold    | RGB values of pixels to not consider when particlizing the image. 0 will include all pixels, 256 will exclude all pixels | `Number`                | `60`       |
+| push         | Amount that each particle is pushed aside on mouseOver                                                                   | `Number`                | `1/60`     |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# FAQ
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+**Q. My image is very slow**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+A: Reduce the number of particles being rendered on the canvas. This can be done through some combination of increasing `threshold`, `gap`, `particleSize`, or decreasing `width`, `height`
