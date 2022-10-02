@@ -14,14 +14,14 @@ export default function LiquidImage({
   canvasHeight = 400,
 }) {
   const canvasRef = React.useRef(null);
+  const liquidRef = React.useRef(null);
 
   useEffect(() => {
     const img = new Image();
     img.crossOrigin = "Anonymous";
     img.src = src;
-    let liquid;
     img.onload = () => {
-      liquid = new Liquid({
+      liquidRef.current = new Liquid({
         canvas: canvasRef.current,
         img: img,
         particleSize,
@@ -36,14 +36,34 @@ export default function LiquidImage({
         canvasHeight,
       });
       setTimeout(() => {
-        liquid.start();
+        liquidRef?.current?.start();
       }, 1e3);
     };
 
     return () => {
-      liquid?.stop();
+      liquidRef?.current?.stop();
     };
   }, []);
+
+  useEffect(() => {
+    if (liquidRef?.current) {
+      liquidRef.current.stop();
+      liquidRef?.current?.init({
+        isUpdate: true,
+        particleSize,
+        push,
+        width,
+        height,
+        threshold,
+        particleType,
+        gap,
+        noise,
+        canvasHeight,
+        canvasWidth,
+      });
+      liquidRef?.current?.start();
+    }
+  }, [particleSize, push, noise, particleType, gap]);
 
   return <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />;
 }

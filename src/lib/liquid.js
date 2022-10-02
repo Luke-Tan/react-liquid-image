@@ -1,8 +1,12 @@
 /* eslint-disable no-unused-expressions */
 export default class Liquid {
-  constructor({
-    canvas,
-    img,
+  constructor({ canvas, img, ...rest }) {
+    this.canvas = canvas;
+    this.img = img;
+    this.init(rest);
+  }
+
+  initProps({
     particleSize,
     push,
     width,
@@ -14,9 +18,7 @@ export default class Liquid {
     canvasHeight,
     canvasWidth,
   }) {
-    this.canvas = canvas;
-    this.img = img;
-    this.mouse = { x: -100, y: -100 };
+    this.mouse = { x: -1000000000, y: -1000000000 };
     this.particles = [];
     this.ctx = void 0;
     this.requestAnimationFrameId = -1;
@@ -47,14 +49,14 @@ export default class Liquid {
         this.step = this.particleSize;
       }
     }
-    this.init();
   }
-  init() {
-    this.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this)),
-      this.canvas.addEventListener(
-        "mouseleave",
-        this.handleMouseLeave.bind(this)
-      );
+  init({ isUpdate = false, ...props }) {
+    this.initProps(props);
+    this.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this));
+    this.canvas.addEventListener(
+      "mouseleave",
+      this.handleMouseLeave.bind(this)
+    );
     this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     this.ctx.drawImage(
       this.img,
@@ -79,8 +81,8 @@ export default class Liquid {
           !(r <= this.threshold && g <= this.threshold && b <= this.threshold)
         ) {
           this.particles.push({
-            currX: Math.random() * this.canvasWidth,
-            currY: 0,
+            currX: isUpdate ? j : Math.random() * this.canvasWidth,
+            currY: isUpdate ? i : 0,
             springOriginX: j,
             springOriginY: i,
             colors: {
@@ -96,20 +98,22 @@ export default class Liquid {
     this.render();
   }
   stop() {
-    cancelAnimationFrame(this.requestAnimationFrameId),
-      document.removeEventListener("mousemove", this.handleMouseMove),
-      document.removeEventListener("mouseleave", this.handleMouseLeave);
+    cancelAnimationFrame(this.requestAnimationFrameId);
+    document.removeEventListener("mousemove", this.handleMouseMove);
+    document.removeEventListener("mouseleave", this.handleMouseLeave);
   }
   handleMouseMove(t) {
     this.mouse.x = t.offsetX;
     this.mouse.y = t.offsetY;
   }
   handleMouseLeave() {
-    this.mouse.x = -100;
-    this.mouse.y = -100;
+    this.mouse.x = -1000000000;
+    this.mouse.y = -1000000000;
   }
+
   render() {
     this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+
     this.particles.forEach((particle) => {
       const { colors } = particle;
       const { red: r, green: g, blue: b } = colors;
@@ -131,8 +135,10 @@ export default class Liquid {
       particle.currY += vyOrigin;
       particle.currX += xRepulse * this.push;
       particle.currY += yRepulse * this.push;
-      this.noise && (particle.currX += Math.random() * this.noise);
-      this.noise && (particle.currY += Math.random() * this.noise);
+      let xc = Math.random() < 0.5 ? -1 : 1;
+      let yc = Math.random() < 0.5 ? -1 : 1;
+      this.noise && (particle.currX += Math.random() * this.noise * xc);
+      this.noise && (particle.currY += Math.random() * this.noise * yc);
       this.ctx.fillStyle = `rgba(${r},${g},${b},1)`;
       this.ctx.beginPath();
       switch (this.particleType) {
