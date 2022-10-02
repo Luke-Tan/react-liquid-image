@@ -18,7 +18,7 @@ Supports customization such as
 
 # Demo
 
-Coming soon
+https://react-liquid-image-demo.netlify.app
 
 # Props
 
