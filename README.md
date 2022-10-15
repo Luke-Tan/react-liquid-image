@@ -26,9 +26,9 @@ https://react-liquid-image-demo.netlify.app
 | ------------ | ------------------------------------------------------------------------------------------------------------------------ | ----------------------- | ---------- |
 | img          | Image source                                                                                                             | `string`                | `null`     |
 | width        | Width of resulting particlized image that is drawn                                                                       | `Number`                | `500`      |
-| height       | Width of resulting particlized image that is drawn                                                                       | `Number`                | `300`      |
+| height       | Height of resulting particlized image that is drawn                                                                       | `Number`                | `300`      |
 | canvasWidth  | Width of the canvas to draw the particlized image on                                                                     | `Number`                | `800`      |
-| canvasHeight | Width of the canvas to draw the particlized image on                                                                     | `Number`                | `400`      |
+| canvasHeight | Height of the canvas to draw the particlized image on                                                                     | `Number`                | `400`      |
 | noise        | How much each particle jiggles when resting (set to 0 for stationary particles at rest)                                  | `Number`                | `0.8`      |
 | gap          | Gap between each particle                                                                                                | `Number`                | `5`        |
 | particleType | Shape of each particle                                                                                                   | `"square" \| "circle" ` | `"square"` |
